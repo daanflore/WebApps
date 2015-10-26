@@ -9,6 +9,7 @@ var mongoose = require('mongoose')
 
 // init database
 require('./models');
+require('./config/passport')
 //require('./models/Posts');
 //require('./models/Comments');
 mongoose.connect('mongodb://localhost/news');
@@ -17,7 +18,7 @@ var routes = require('./routes/index');
 var users = require('./routes/users');
 
 var app = express();
-
+var passport = require('passport');
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -30,7 +31,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-
+app.use(passport.initialize());
 //kan "joi" gebruiken hier voor validatie
 
 app.use('/', routes);
