@@ -1,0 +1,2 @@
+require('./Posts');
+require('./Comments');
