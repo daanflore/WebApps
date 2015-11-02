@@ -14,10 +14,11 @@
     userProperty: "payload"
   });
 
-  router.post('/posts/:post/comments',auth, function(req, res, next) {
+  router.route("/posts/:post/comments")
+    .post(auth, function(req, res, next) {
       var comment = new Comment(req.body);
       comment.post = req.post;
-      comment.upvotes = 1;
+      comment.author = req.payload.username;
 
       comment.save(function(err, comment) {
         if (err) {
@@ -30,30 +31,51 @@
             return next(err);
           }
 
-            res.json(comment);
-          });
-        })
+          res.json(comment);
+        });
       });
+    });
+    router.put('/posts/:post/comments/:comment/upvote',auth, function (req, res, next) {
+    req.comment.upvote(function (err, comment) {
+      if (err) { return next(err); }
 
-router.param('comment', function (req, res, next, id) {
-  var query = Comment.findById(id);
-
-  query.exec(function (err, comment) {
-    if (err) { return next(err); }
-    if (!comment) { return next(new Error('can\'t find comment')); }
-
-    req.comment = comment;
-    return next();
+      res.json(comment);
+    });
   });
-});
 
-router.put('/posts/:post/comments/:comment/upvote',auth, function (req, res, next) {
-  req.comment.upvote(function (err, comment) {
-    if (err) { return next(err); }
+  router.param("post", function(req, res, next, id) {
+    var query = Post.findById(id);
 
-    res.json(comment);
+    query.exec(function(err, post) {
+      if (err) {
+        return next(err);
+      }
+
+      if (!post) {
+        return next(new Error("can't find post"));
+      }
+
+      req.post = post;
+      return next();
+    });
   });
-});
+
+  router.param("comment", function(req, res, next, id) {
+    var query = Comment.findById(id);
+
+    query.exec(function(err, comment) {
+      if (err) {
+        return next(err);
+      }
+
+      if (!comment) {
+        return next(new Error("can't find comment"));
+      }
+
+      req.comment = comment;
+      return next();
+    });
+  });
 
   module.exports = router;
 })();

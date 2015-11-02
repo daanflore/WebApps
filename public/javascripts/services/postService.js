@@ -62,7 +62,6 @@
             Authorization: "Bearer " + authService.getToken()
           }
         }).success(function(upvotedComment) {
-          // TODO should code like this be in the controller or the service?
           angular.copy(upvotedComment, comment);
         });
       }
