@@ -15,51 +15,93 @@
     userProperty: "payload"
   });
 
-  router.get('/posts', function (req, res, next) {
-  Post.find(function (err, posts) {
-    if (err) { return next(err); }
-
-    res.json(posts);
+  router.get('/posts', function(req, res, next) {
+    Post.find(function(err, posts) {
+      if (err) {
+        return next(err);
+      }
+      //load id and username
+      Post.populate(posts, {
+        path: "author",
+        select: "username"
+      }).then(function(posts) {
+        res.json(posts);
+      });
+    });
   });
-});
 
-router.post('/posts',auth, function (req, res, next) {
-  var post = new Post(req.body);
-  post.auther = req.payload.username;
-  post.save(function (err, post) {
-    if (err) { return next(err); }
+  router.post('/posts', auth, function(req, res, next) {
+    var post = new Post(req.body);
+    post.auther = req.payload.username;
+    post.save(function(err, post) {
+        if (err) {
+          return next(err);
+        }
 
-    res.json(post);
+        Post.populate(post, {
+          path: "author",
+          select: "username"
+        }).then(function(post) {
+          res.json(post);
+        });
+      });
+    });
+
+  router.param('post', function(req, res, next, id) {
+    var query = Post.findById(id);
+
+    query.exec(function(err, post) {
+      if (err) {
+        return next(err);
+      }
+      if (!post) {
+        return next(new Error('can\'t find post'));
+      }
+
+      req.post = post;
+      return next();
+    });
   });
-});
 
-router.param('post', function (req, res, next, id) {
-  var query = Post.findById(id);
+  router.get('/posts/:post', function(req, res, next) {
+    req.post.populate('comments', function(err, post) {
+      if (err) {
+        return next(err);
+      }
 
-  query.exec(function (err, post) {
-    if (err) { return next(err); }
-    if (!post) { return next(new Error('can\'t find post')); }
-
-    req.post = post;
-    return next();
+      res.json(post);
+    });
   });
-});
 
-router.get('/posts/:post',function (req, res, next) {
-  req.post.populate('comments', function (err, post) {
-    if (err) { return next(err); }
-
-    res.json(post);
+  router.delete('/posts/:post', auth, function(req, res, next) {
+    Comment.remove({
+      post: req.post
+    }, function(err) {
+      if (err) {
+        return next(err);
+      }
+      req.post.remove(function(err) {
+        if (err) {
+          return next(err);
+        }
+        res.send("succes");
+      });
+    });
   });
-});
 
-router.put('/posts/:post/upvote',auth, function (req, res, next) {
-  req.post.upvote(function (err, post) {
-    if (err) { return next(err); }
 
-    res.json(post);
+  router.put('/posts/:post/upvote', auth, function(req, res, next) {
+    req.post.upvote(function(err, post) {
+      if (err) {return next(err);}
+
+      Post.populate(post,{
+        path:"author",
+        select:"username"
+      }).then(function(post){
+        res.json(post);
+      });
+    });
   });
-});
 
   module.exports = router;
 })();

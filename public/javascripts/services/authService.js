@@ -70,6 +70,7 @@
       auth.register = register;
       auth.logIn = logIn;
       auth.logOut = logOut;
+      auth.currentUserId=currentUserId;
 
       return auth;
     }
