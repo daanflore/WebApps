@@ -19,9 +19,6 @@
 
       function get(id) {
         return $http.get("/posts/" + id).then(function(response) {
-          headers: {
-            Authorization: "Bearer " + authService.getToken()
-          }
           return response.data;
         });
       }
@@ -33,6 +30,16 @@
           }
         }).success(function(savedPost) {
           postFactory.posts.push(savedPost);
+        });
+      }
+
+      function deletePost(post) {
+        return $http.delete("/posts/" + post._id, {
+          headers: {
+            Authorization: "Bearer " + authService.getToken()
+          }
+        }).success(function() {
+          postFactory.posts.splice(postFactory.posts.indexOf(post), 1);
         });
       }
 
@@ -73,6 +80,7 @@
       postFactory.upvote = upvote;
       postFactory.addComment = addComment;
       postFactory.upvoteComment = upvoteComment;
+      postFactory.deletePost = deletePost;
 
 
       return postFactory;
