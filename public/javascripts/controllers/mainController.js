@@ -34,15 +34,18 @@
     "postService",
     "authService",
     function($scope, postService, authService) {
-
+      $scope.showError=false;
       $scope.posts = postService.posts;
 
       function addPost() {
+        $scope.showError=false;
         if (!$scope.title || $scope.title === "") {return;}
 
         postService.create({
           title: $scope.title,
-          link: $scope.link
+          link: $scope.link,
+          author: authService.currentUserId(),
+          postDay: new Date()
         });
 
         $scope.title = "";
@@ -50,11 +53,29 @@
 
       };
 
+      function deletePost(post){
+        $scope.showError=false;
+        if(post.author._id ===authService.currentUserId()){
+        postService.deletePost(post);
+      }
+      else{
+        $scope.showError=true;
+        $scope.error = "You are not the author of this post";
+      }
+      }
+
       function incrementUpvotes(post) {
+        $scope.showError=false;
         postService.upvote(post);
       };
+      function incrementDownvotes(post){
+        $scope.showError=false;
+        postService.downvote(post);
+      }
       $scope.addPost = addPost;
       $scope.incrementUpvotes = incrementUpvotes;
+      $scope.incrementDownvotes= incrementDownvotes;
+      $scope.deletePost = deletePost;
     }
   ]);
 })();

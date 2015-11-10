@@ -19,9 +19,6 @@
 
       function get(id) {
         return $http.get("/posts/" + id).then(function(response) {
-          headers: {
-            Authorization: "Bearer " + authService.getToken()
-          }
           return response.data;
         });
       }
@@ -36,6 +33,16 @@
         });
       }
 
+      function deletePost(post) {
+        return $http.delete("/posts/" + post._id, {
+          headers: {
+            Authorization: "Bearer " + authService.getToken()
+          }
+        }).success(function() {
+          postFactory.posts.splice(postFactory.posts.indexOf(post), 1);
+        });
+      }
+
 
       function upvote(post) {
         return $http.put("/posts/" + post._id + "/upvote", null, {
@@ -46,6 +53,7 @@
           angular.copy(upvotedPost, post);
         });
       }
+
 
 
       function addComment(id, comment) {
@@ -66,13 +74,25 @@
         });
       }
 
+      function downvote(post) {
+        return $http.put("/posts/" + post._id + "/downvote", null, {
+          headers: {
+            Authorization: "Bearer " + authService.getToken()
+          }
+        }).success(function(downvotedPost) {
+          angular.copy(downvotedPost, post);
+        });
+      }
+
 
       postFactory.getAll = getAll;
       postFactory.get = get;
       postFactory.create = create;
       postFactory.upvote = upvote;
+      postFactory.downvote= downvote;
       postFactory.addComment = addComment;
       postFactory.upvoteComment = upvoteComment;
+      postFactory.deletePost = deletePost;
 
 
       return postFactory;
