@@ -55,6 +55,7 @@
       }
 
 
+
       function addComment(id, comment) {
         return $http.post("/posts/" + id + "/comments", comment, {
           headers: {
@@ -73,11 +74,22 @@
         });
       }
 
+      function downvote(post) {
+        return $http.put("/posts/" + post._id + "/downvote", null, {
+          headers: {
+            Authorization: "Bearer " + authService.getToken()
+          }
+        }).success(function(downvotedPost) {
+          angular.copy(downvotedPost, post);
+        });
+      }
+
 
       postFactory.getAll = getAll;
       postFactory.get = get;
       postFactory.create = create;
       postFactory.upvote = upvote;
+      postFactory.downvote= downvote;
       postFactory.addComment = addComment;
       postFactory.upvoteComment = upvoteComment;
       postFactory.deletePost = deletePost;

@@ -68,8 +68,13 @@
         $scope.showError=false;
         postService.upvote(post);
       };
+      function incrementDownvotes(post){
+        $scope.showError=false;
+        postService.downvote(post);
+      }
       $scope.addPost = addPost;
       $scope.incrementUpvotes = incrementUpvotes;
+      $scope.incrementDownvotes= incrementDownvotes;
       $scope.deletePost = deletePost;
     }
   ]);

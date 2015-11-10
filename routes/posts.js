@@ -103,5 +103,17 @@
     });
   });
 
+  router.put("/posts/:post/downvote",auth, function(req, res, next) {
+      req.post.downvote(function(err, post) {
+        if (err) {return next(err);}
+        Post.populate(post, {
+          path: "author",
+          select: "username"
+        }).then(function(post) {
+          res.json(post);
+        });
+      });
+    });
+
   module.exports = router;
 })();
