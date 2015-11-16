@@ -2,12 +2,14 @@
   "use strict";
 
   var app = angular.module("flapper-news.controllers.main", [
-    "ui.router"
+    "ui.router",
+    "pascalprecht.translate"
   ]);
 
   app.config([
     "$stateProvider",
-    function($stateProvider) {
+    "$translateProvider",
+    function($stateProvider,$translateProvider) {
       $stateProvider.state("home", {
         parent: "root",
         url: "/home",
@@ -26,6 +28,12 @@
           ]
         }
       });
+      $translateProvider.useStaticFilesLoader({
+prefix: '../../l10n/',
+suffix: '.json'
+});
+
+$translateProvider.preferredLanguage('en');
     }
   ]);
 
