@@ -22,7 +22,10 @@
         resolve: {
           getPostsPromise: [
             "postService",
-            function(postService) {
+            "langService",
+            function(postService,langService) {
+              console.log("hallo");
+              langService.get();
               return postService.getAll();
             }
           ]
@@ -40,11 +43,16 @@ $translateProvider.preferredLanguage('en');
   app.controller("MainController", [
     "$scope",
     "postService",
-    "authService",
-    function($scope, postService, authService) {
+    "langService",
+    "$translate",
+    function($scope, postService,langService ,$translate) {
       $scope.showError=false;
       $scope.posts = postService.posts;
-
+      if(langService.translations){
+    $translate.use(langService.translations);
+  }else{
+    $translate.use('en');
+  }
       function addPost() {
         $scope.showError=false;
         if (!$scope.title || $scope.title === "") {return;}
