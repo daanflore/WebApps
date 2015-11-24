@@ -8,10 +8,11 @@
       "authService",
       function($http, authService) {
         var translations = {
-          translations:"",
+          translations:"nl",
                   };
 
         function get() {
+          if(authService.isLoggedIn()){
             return $http.get("/user/"+authService.currentUserId()+"/lang")
               .then(function(response) {
 
@@ -22,6 +23,8 @@
 
 
         }
+
+      }
 
 
       //adds methodes to recipeFactory

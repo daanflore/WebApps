@@ -24,7 +24,6 @@
             "postService",
             "langService",
             function(postService,langService) {
-              console.log("hallo");
               langService.get();
               return postService.getAll();
             }
