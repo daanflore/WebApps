@@ -48,7 +48,8 @@
 
         postService.addComment(post._id, {
           body: $scope.body,
-          author:"user"
+          author:"user",
+          postDay: new Date()
         }).success(function(comment) {
           $scope.post.comments.push(comment);
         });
@@ -59,8 +60,25 @@
       function incrementUpvotes(comment) {
         postService.upvoteComment(post, comment);
       }
-
-
+      function incrementDownvotes(comment){
+        postService.downvoteComment(post, comment);
+      }
+      function deleteComment(comment){
+        console.log("hallo");
+        $scope.showError=false;
+        console.log(comment.author._id);
+        console.log(authService.currentUserId())
+        if(comment.author._id ===authService.currentUserId()){
+        postService.deleteComment(post,comment);
+      }
+      else{
+          console.log("hallo dit is fout");
+        $scope.showError=true;
+        $scope.error = "You are not the author of this comment";
+      }
+      }
+      $scope.deleteComment=deleteComment;
+      $scope.incrementDownvotes= incrementDownvotes;
       $scope.addComment = addComment;
       $scope.incrementUpvotes = incrementUpvotes;
 

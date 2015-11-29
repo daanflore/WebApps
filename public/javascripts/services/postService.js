@@ -42,6 +42,15 @@
           postFactory.posts.splice(postFactory.posts.indexOf(post), 1);
         });
       }
+      function deleteComment(post,comment) {
+        return $http.delete("/posts/" + post._id + "/comments/" + comment._id, {
+          headers: {
+            Authorization: "Bearer " + authService.getToken()
+          }
+        }).success(function() {
+          postFactory.posts.splice(postFactory.posts.comments.indexOf(post), 1);
+        });
+      }
 
 
       function upvote(post) {
@@ -73,6 +82,15 @@
           angular.copy(upvotedComment, comment);
         });
       }
+      function downvoteComment(post, comment) {
+        return $http.put("/posts/" + post._id + "/comments/" + comment._id + "/downvote", null, {
+          headers: {
+            Authorization: "Bearer " + authService.getToken()
+          }
+        }).success(function(downvotedComment) {
+          angular.copy(downvotedComment, comment);
+        });
+      }
 
       function downvote(post) {
         return $http.put("/posts/" + post._id + "/downvote", null, {
@@ -93,8 +111,8 @@
       postFactory.addComment = addComment;
       postFactory.upvoteComment = upvoteComment;
       postFactory.deletePost = deletePost;
-
-
+      postFactory.downvoteComment = downvoteComment;
+      postFactory.deleteComment= deleteComment;
       return postFactory;
     }
   ]);

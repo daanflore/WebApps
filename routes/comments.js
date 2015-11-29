@@ -24,7 +24,6 @@
         if (err) {
           return next(err);
         }
-
         req.post.comments.push(comment);
         req.post.save(function(err, post) {
           if (err) {
@@ -42,6 +41,29 @@
       res.json(comment);
     });
   });
+  router.put('/posts/:post/comments/:comment/downvote', auth, function (req, res, next) {
+  req.comment.downvote(function (err, comment) {
+    if (err) { return next(err); }
+
+    res.json(comment);
+  });
+});
+router.delete('/posts/:post/comments/:comment', auth, function(req, res, next) {
+
+   req.post.comments.splice(req.post.comments.indexOf(req.comment), 1);
+   req.post.save(function(err, post) {
+     if (err) {
+       return next(err);
+     }
+
+     req.comment.remove(function(err) {
+       if (err) {
+         return next(err);
+       }
+       res.send("success");
+     });
+   });
+});
 
   router.param("post", function(req, res, next, id) {
     var query = Post.findById(id);
