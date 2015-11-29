@@ -62,7 +62,12 @@
       function logOut() {
         $window.localStorage.removeItem("flapper-news-token");
       }
-
+      function getLang(){
+  $http.get("/user/" + currentUserId() + "/lang")
+    .then(function(response) {
+      return response.data;
+    });
+}
 
 
       auth.saveToken = saveToken;

@@ -44,7 +44,8 @@ $translateProvider.preferredLanguage('en');
     "postService",
     "langService",
     "$translate",
-    function($scope, postService,langService ,$translate) {
+    "authService",
+    function($scope, postService,langService ,$translate,authService) {
       $scope.showError=false;
       $scope.posts = postService.posts;
       if(langService.translations){
