@@ -25,6 +25,13 @@
         path: "author",
         select: "username"
       }).then(function(posts) {
+        Comment.populate(posts.comments,{
+          path:"author",
+          select:"username"
+        }).then(function(){
+          console.log("Comments after populate: "+comments);
+          res.json(posts);
+        });
         res.json(posts);
       });
     });

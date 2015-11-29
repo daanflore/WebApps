@@ -54,6 +54,7 @@
 
 
       function upvote(post) {
+        console.log(authService.getToken());
         return $http.put("/posts/" + post._id + "/upvote", null, {
           headers: {
             Authorization: "Bearer " + authService.getToken()
@@ -66,6 +67,7 @@
 
 
       function addComment(id, comment) {
+        console.log("test");
         return $http.post("/posts/" + id + "/comments", comment, {
           headers: {
             Authorization: "Bearer " + authService.getToken()

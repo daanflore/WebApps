@@ -16,22 +16,31 @@
 
   router.route("/posts/:post/comments")
     .post(auth, function(req, res, next) {
+      console.log(req.body);
       var comment = new Comment(req.body);
       comment.post = req.post;
-      comment.author = req.payload.username;
-
+      //comment.author = req.payload.username;
+      comment.postDay=new Date();
+      console.log(comment);
       comment.save(function(err, comment) {
         if (err) {
+          console.log(err);
           return next(err);
         }
-        req.post.comments.push(comment);
-        req.post.save(function(err, post) {
-          if (err) {
-            return next(err);
-          }
+        Comment.populate(comment,{
+          path:"author",
+          select:"username"
+        }).then(function(comment){
+          req.post.comments.push(comment);
+          req.post.save(function(err, post) {
+            if (err) {
+              return next(err);
+            }
 
-          res.json(comment);
+            res.json(comment);
+          });
         });
+
       });
     });
     router.put('/posts/:post/comments/:comment/upvote',auth, function (req, res, next) {

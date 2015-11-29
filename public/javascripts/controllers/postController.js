@@ -45,10 +45,10 @@
         if ($scope.body === '') {
           return;
         }
-
+        console.log("test");
         postService.addComment(post._id, {
           body: $scope.body,
-          author:"user",
+          author: authService.currentUserId(),
           postDay: new Date()
         }).success(function(comment) {
           $scope.post.comments.push(comment);
