@@ -8,6 +8,7 @@
     "flapper-news.controllers.nav",
     "flapper-news.services.post",
     "flapper-news.services.auth",
+    "flapper-news.services.lang",
     "ui.router"
   ]);
 

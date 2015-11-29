@@ -2,12 +2,14 @@
   "use strict";
 
   var app = angular.module("flapper-news.controllers.main", [
-    "ui.router"
+    "ui.router",
+    "pascalprecht.translate"
   ]);
 
   app.config([
     "$stateProvider",
-    function($stateProvider) {
+    "$translateProvider",
+    function($stateProvider,$translateProvider) {
       $stateProvider.state("home", {
         parent: "root",
         url: "/home",
@@ -20,23 +22,37 @@
         resolve: {
           getPostsPromise: [
             "postService",
-            function(postService) {
+            "langService",
+            function(postService,langService) {
+              langService.get();
               return postService.getAll();
             }
           ]
         }
       });
+      $translateProvider.useStaticFilesLoader({
+prefix: '../../l10n/',
+suffix: '.json'
+});
+
+$translateProvider.preferredLanguage('en');
     }
   ]);
 
   app.controller("MainController", [
     "$scope",
     "postService",
+    "langService",
+    "$translate",
     "authService",
-    function($scope, postService, authService) {
+    function($scope, postService,langService ,$translate,authService) {
       $scope.showError=false;
       $scope.posts = postService.posts;
-
+      if(langService.translations){
+    $translate.use(langService.translations);
+  }else{
+    $translate.use('en');
+  }
       function addPost() {
         $scope.showError=false;
         if (!$scope.title || $scope.title === "") {return;}
