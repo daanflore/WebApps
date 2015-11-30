@@ -6,6 +6,7 @@ var CommentSchema = mongoose.Schema({
   type: mongoose.Schema.Types.ObjectId,
   ref: "User"
 },
+  postDay:Date,
   upvotes:{type:Number,default:0},
   post:{type: mongoose.Schema.Types.ObjectId,ref:'Post'}
 });
