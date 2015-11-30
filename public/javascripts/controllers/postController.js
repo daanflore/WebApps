@@ -83,12 +83,14 @@
       }
 
       function deleteComment(comment) {
-        console.log("hallo");
         $scope.showError = false;
-        console.log(comment.author._id);
+        console.log(comment.author);
         console.log(authService.currentUserId())
-        if (comment.author._id === authService.currentUserId()) {
-          postService.deleteComment(post, comment);
+        if (comment.author === authService.currentUserId()) {
+          postService.deleteComment(post, comment).then(function(){
+              $scope.post.comments.splice(post.comments.indexOf(comment), 1);
+          });
+
         } else {
           console.log("hallo dit is fout");
           $scope.showError = true;

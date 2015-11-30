@@ -48,7 +48,7 @@
             Authorization: "Bearer " + authService.getToken()
           }
         }).success(function() {
-          postFactory.posts.splice(postFactory.posts.comments.indexOf(post), 1);
+        
         });
       }
 
