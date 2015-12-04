@@ -16,24 +16,24 @@
 
   router.route("/posts/:post/comments")
     .post(auth, function(req, res, next) {
+      console.log(req.body);
       var comment = new Comment(req.body);
       comment.post = req.post;
-      comment.author = req.payload.username;
-
       comment.save(function(err, comment) {
         if (err) {
+          console.log(err);
           return next(err);
         }
-        req.post.comments.push(comment);
-        req.post.save(function(err, post) {
-          if (err) {
-            return next(err);
-          }
-
-          res.json(comment);
+          req.post.comments.push(comment);
+          req.post.save(function(err, post) {
+            if (err) {
+              return next(err);
+            }
+            res.json(comment);
+          });
         });
       });
-    });
+
     router.put('/posts/:post/comments/:comment/upvote',auth, function (req, res, next) {
     req.comment.upvote(function (err, comment) {
       if (err) { return next(err); }

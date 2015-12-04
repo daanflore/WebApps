@@ -1,5 +1,11 @@
 {
 "title":"Flapper news",
-"test":"test",
-"waarom":"waarom"
+"upvotes":"upvotes",
+"posted":"posted on",
+"by":"by",
+"delete":"delete",
+"newPost":"add new post",
+"Link":"Link",
+"ADDCOMMENT":"New Comment",
+"ADDCOMMENTT":"Add comment"
 }

@@ -57,21 +57,32 @@
       if (!post) {
         return next(new Error('can\'t find post'));
       }
-
       req.post = post;
       return next();
     });
   });
 
   router.get('/posts/:post', function(req, res, next) {
+    var teller=1;
     req.post.populate('comments', function(err, post) {
       if (err) {
         return next(err);
       }
-
-      res.json(post);
-    });
-  });
+      post.comments.forEach(function(comment){
+        comment.populate('author',function(err,comment){
+          if(err){
+            return next(err);
+          }
+          console.log(teller);
+          console.log(post.comments.length);
+            if(teller==post.comments.length){
+              res.json(post);
+            }
+            teller++;
+          });
+        });
+      });
+     });
 
   router.delete('/posts/:post', auth, function(req, res, next) {
     Comment.remove({
